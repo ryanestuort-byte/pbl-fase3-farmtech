@@ -1,0 +1,1 @@
+Coloque aqui os prints do Oracle SQL Developer e das consultas SQL.

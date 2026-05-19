@@ -1,0 +1,53 @@
+-- FarmTech Solutions - Fase 3
+-- Arquivo SQL para consultas no Oracle SQL Developer
+
+-- 1) Depois de importar o CSV pelo SQL Developer, use o nome FARMTECH_SENSORES
+-- Caso prefira criar manualmente, use a estrutura abaixo:
+
+CREATE TABLE FARMTECH_SENSORES (
+    ID NUMBER PRIMARY KEY,
+    DATA_HORA VARCHAR2(30),
+    CULTURA VARCHAR2(30),
+    UMIDADE NUMBER(5,2),
+    FOSFORO_P NUMBER,
+    POTASSIO_K NUMBER,
+    PH NUMBER(4,2),
+    TEMPERATURA NUMBER(5,2),
+    STATUS_IRRIGACAO VARCHAR2(20)
+);
+
+-- 2) Consulta geral obrigatória
+SELECT * FROM FARMTECH_SENSORES;
+
+-- 3) Consulta para verificar irrigação ligada
+SELECT ID, DATA_HORA, CULTURA, UMIDADE, TEMPERATURA, STATUS_IRRIGACAO
+FROM FARMTECH_SENSORES
+WHERE STATUS_IRRIGACAO = 'Ligada';
+
+-- 4) Média dos sensores por cultura
+SELECT
+    CULTURA,
+    ROUND(AVG(UMIDADE), 2) AS MEDIA_UMIDADE,
+    ROUND(AVG(FOSFORO_P), 2) AS MEDIA_FOSFORO,
+    ROUND(AVG(POTASSIO_K), 2) AS MEDIA_POTASSIO,
+    ROUND(AVG(PH), 2) AS MEDIA_PH,
+    ROUND(AVG(TEMPERATURA), 2) AS MEDIA_TEMPERATURA
+FROM FARMTECH_SENSORES
+GROUP BY CULTURA;
+
+-- 5) Leituras críticas de umidade
+SELECT *
+FROM FARMTECH_SENSORES
+WHERE UMIDADE < 50
+ORDER BY UMIDADE ASC;
+
+-- 6) Quantidade de registros por status da irrigação
+SELECT STATUS_IRRIGACAO, COUNT(*) AS TOTAL
+FROM FARMTECH_SENSORES
+GROUP BY STATUS_IRRIGACAO;
+
+-- 7) Registros com pH fora da faixa ideal aproximada
+SELECT ID, DATA_HORA, CULTURA, PH
+FROM FARMTECH_SENSORES
+WHERE PH < 5.5 OR PH > 7.0
+ORDER BY PH;
